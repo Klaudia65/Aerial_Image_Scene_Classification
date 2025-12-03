@@ -33,7 +33,7 @@ To establish a quick benchmark, we extracted simple statistical features from th
 
 | Feature Name | Description |
 | :--- | :--- |
-| $\text{mean\_R}, \text{mean\_G}, \text{mean\_B}$ | Mean intensity of the RGB channels. |
+| $\text{mean\R}, \text{mean\G}, \text{mean\B}$ | Mean intensity of the RGB channels. |
 | $\text{std\_R}, \text{std\_G}, \text{std\_B}$ | Standard deviation (variance) of the RGB channels. |
 | $\text{mean\_ExG}$ | Mean of the **Excess Green Index** ($\text{ExG} = 2G - R - B$), used to highlight vegetation. |
 
@@ -70,11 +70,9 @@ The results strongly indicate that the basic features are highly useful discrimi
 
 | Feature Analyzed | F-Statistic | P-value ($p < 0.05$) | Conclusion |
 | :--- | :--- | :--- | :--- |
-| $\text{mean\_R}$ | $172.63$ | $0.000\text{e}+00$ | **Reject $H_0$** (Highly Significant) |
 | $\text{mean\_G}$ | $170.43$ | $0.000\text{e}+00$ | **Reject $H_0$** (Highly Significant) |
 | $\text{mean\_ExG}$ | $79.10$ | $1.113\text{e}-300$ | **Reject $H_0$** (Highly Significant) |
 | $\text{std\_G}$ | $76.15$ | $1.187\text{e}-289$ | **Reject $H_0$** (Highly Significant) |
-| $\text{std\_B}$ | $97.99$ | $0.000\text{e}+00$ | **Reject $H_0$** (Highly Significant) |
 
 **Interpretation:** The P-values confirm that the observed differences are highly improbable to be due to random chance. **Rejecting $\mathbf{H_0}$** means the feature is statistically useful for classification.
 
@@ -112,33 +110,33 @@ print(classification_report(y_test, y_pred))
 ```
 ### Results
 
-precision    recall  f1-score   support
+| Class | Precision | Recall | F1-Score | Support |
+| :--- | ---: | ---: | ---: | ---: |
+| agricultural | 0.37 | 0.32 | 0.34 | 100 |
+| airplane | 0.21 | 0.18 | 0.19 | 100 |
+| baseballdiamond | 0.46 | 0.44 | 0.45 | 100 |
+| beach | 0.33 | 0.37 | 0.35 | 100 |
+| buildings | 0.15 | 0.15 | 0.15 | 100 |
+| chaparral | 0.39 | 0.51 | 0.44 | 100 |
+| denseresidential | 0.24 | 0.19 | 0.21 | 100 |
+| forest | 0.45 | 0.54 | 0.49 | 100 |
+| freeway | 0.13 | 0.17 | 0.15 | 100 |
+| golfcourse | 0.32 | 0.37 | 0.34 | 100 |
+| harbor | 0.60 | 0.64 | 0.62 | 100 |
+| intersection | 0.11 | 0.13 | 0.12 | 100 |
+| mediumresidential | 0.15 | 0.15 | 0.15 | 100 |
+| mobilehomepark | 0.26 | 0.31 | 0.28 | 100 |
+| overpass | 0.22 | 0.20 | 0.21 | 100 |
+| parkinglot | 0.19 | 0.19 | 0.19 | 100 |
+| river | 0.34 | 0.32 | 0.33 | 100 |
+| runway | 0.19 | 0.14 | 0.16 | 100 |
+| sparseresidential | 0.19 | 0.17 | 0.18 | 100 |
+| storagetanks | 0.23 | 0.17 | 0.20 | 100 |
+| tenniscourt | 0.15 | 0.12 | 0.13 | 100 |
+| **accuracy** | | | **0.28** | **2100** |
+| **macro avg** | **0.27** | **0.28** | **0.27** | **2100** |
+| **weighted avg** | **0.27** | **0.28** | **0.27** | **2100** |
 
-     agricultural       0.37      0.32      0.34       100
-         airplane       0.21      0.18      0.19       100
-  baseballdiamond       0.46      0.44      0.45       100
-            beach       0.33      0.37      0.35       100
-        buildings       0.15      0.15      0.15       100
-        chaparral       0.39      0.51      0.44       100
- denseresidential       0.24      0.19      0.21       100
-           forest       0.45      0.54      0.49       100
-          freeway       0.13      0.17      0.15       100
-       golfcourse       0.32      0.37      0.34       100
-           harbor       0.60      0.64      0.62       100
-     intersection       0.11      0.13      0.12       100
-mediumresidential       0.15      0.15      0.15       100
-   mobilehomepark       0.26      0.31      0.28       100
-         overpass       0.22      0.20      0.21       100
-       parkinglot       0.19      0.19      0.19       100
-            river       0.34      0.32      0.33       100
-           runway       0.19      0.14      0.16       100
-sparseresidential       0.19      0.17      0.18       100
-     storagetanks       0.23      0.17      0.20       100
-      tenniscourt       0.15      0.12      0.13       100
-
-         accuracy                           0.28      2100
-        macro avg       0.27      0.28      0.27      2100
-     weighted avg       0.27      0.28      0.27      2100
 
 
 **Accuracy (Overall)	0.28 (28%)	2100**
