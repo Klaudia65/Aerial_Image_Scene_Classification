@@ -33,9 +33,9 @@ To establish a quick benchmark, we extracted simple statistical features from th
 
 | Feature Name | Description |
 | :--- | :--- |
-| $\text{mean\R}, \text{mean\G}, \text{mean\B}$ | Mean intensity of the RGB channels. |
-| $\text{std\_R}, \text{std\_G}, \text{std\_B}$ | Standard deviation (variance) of the RGB channels. |
-| $\text{mean\_ExG}$ | Mean of the **Excess Green Index** ($\text{ExG} = 2G - R - B$), used to highlight vegetation. |
+| $\text{mean_R}, \text{mean_G}, \text{mean_B}$ | Mean intensity of the RGB channels. |
+| $\text{std_R}, \text{std_G}, \text{std_B}$ | Standard deviation (variance) of the RGB channels. |
+| $\text{mean_ExG}$ | Mean of the **Excess Green Index** ($\text{ExG} = 2G - R - B$), used to highlight vegetation. |
 
 ---
 
@@ -44,7 +44,7 @@ To establish a quick benchmark, we extracted simple statistical features from th
 ### Univariate and Bivariate Analysis
 
 #### Univariate Analysis (Distribution)
-We analyzed the distribution of each feature across all images (e.g., histogram for $\text{mean\_ExG}$).
+We analyzed the distribution of each feature across all images (e.g., histogram for $\text{mean_ExG}$).
 * **Visualization:** 
 
 [Image of Histogram illustrating univariate analysis]
@@ -52,7 +52,7 @@ We analyzed the distribution of each feature across all images (e.g., histogram 
 * **Purpose:** To check for symmetry, skewness, and potential outliers before normalization.
 
 #### Bivariate Analysis (Boxplots)
-Boxplots were generated to study the distribution of a single feature ($\text{mean\_ExG}$) across the 21 target classes. This checks the **discriminative power** of the feature.
+Boxplots were generated to study the distribution of a single feature ($\text{mean_ExG}$) across the 21 target classes. This checks the **discriminative power** of the feature.
 * **Visualization:** 
 
 [Image of Boxplot illustrating bivariate analysis]
@@ -60,7 +60,7 @@ Boxplots were generated to study the distribution of a single feature ($\text{me
 * **Key Observations:**
     * **Separability:** Classes with distinct quartile boxes (e.g., **"forest" vs "runway"**) are easily distinguishable by this feature.
     * **Overlap:** Classes with heavily overlapping boxes (e.g., **"dense residential" vs "medium residential"**) are harder to separate.
-    * **Relevance:** Vegetation classes (forest, agricultural) exhibit higher $\text{mean\_ExG}$ values than classes composed of inert materials (buildings, freeways).
+    * **Relevance:** Vegetation classes (forest, agricultural) exhibit higher $\text{mean_ExG}$ values than classes composed of inert materials (buildings, freeways).
 
 ### Statistical Correlation (ANOVA Test)
 
