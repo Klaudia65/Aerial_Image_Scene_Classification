@@ -33,9 +33,9 @@ To establish a quick benchmark, we extracted simple statistical features from th
 
 | Feature Name | Description |
 | :--- | :--- |
-| $\text{mean_R}, \text{mean_G}, \text{mean_B}$ | Mean intensity of the RGB channels. |
-| $\text{std_R}, \text{std_G}, \text{std_B}$ | Standard deviation (variance) of the RGB channels. |
-| $\text{mean_ExG}$ | Mean of the **Excess Green Index** ($\text{ExG} = 2G - R - B$), used to highlight vegetation. |
+| mean_R, mean_G, mean_B | Mean intensity of the RGB channels. |
+| std_R, std_G, std_B | Standard deviation (variance) of the RGB channels. |
+| mean_ExG | Mean of the **Excess Green Index** (ExG = 2G - R - B), used to highlight vegetation. |
 
 ---
 
@@ -44,7 +44,7 @@ To establish a quick benchmark, we extracted simple statistical features from th
 ### Univariate and Bivariate Analysis
 
 #### Univariate Analysis (Distribution)
-We analyzed the distribution of each feature across all images (e.g., histogram for $\text{mean_ExG}$).
+We analyzed the distribution of each feature across all images (e.g., histogram for mean_ExG).
 * **Visualization:** 
 
 [Image of Histogram illustrating univariate analysis]
@@ -52,7 +52,7 @@ We analyzed the distribution of each feature across all images (e.g., histogram 
 * **Purpose:** To check for symmetry, skewness, and potential outliers before normalization.
 
 #### Bivariate Analysis (Boxplots)
-Boxplots were generated to study the distribution of a single feature ($\text{mean_ExG}$) across the 21 target classes. This checks the **discriminative power** of the feature.
+Boxplots were generated to study the distribution of a single feature (mean_ExG) across the 21 target classes. This checks the **discriminative power** of the feature.
 * **Visualization:** 
 
 [Image of Boxplot illustrating bivariate analysis]
@@ -60,21 +60,21 @@ Boxplots were generated to study the distribution of a single feature ($\text{me
 * **Key Observations:**
     * **Separability:** Classes with distinct quartile boxes (e.g., **"forest" vs "runway"**) are easily distinguishable by this feature.
     * **Overlap:** Classes with heavily overlapping boxes (e.g., **"dense residential" vs "medium residential"**) are harder to separate.
-    * **Relevance:** Vegetation classes (forest, agricultural) exhibit higher $\text{mean_ExG}$ values than classes composed of inert materials (buildings, freeways).
+    * **Relevance:** Vegetation classes (forest, agricultural) exhibit higher mean_ExG values than classes composed of inert materials (buildings, freeways).
 
 ### Statistical Correlation (ANOVA Test)
 
-The ANOVA test was used to statistically confirm that the differences observed in the Boxplots are not due to chance, testing the **Null Hypothesis ($\mathbf{H_0}$):** that the means of the feature are the same across all 21 classes.
+The ANOVA test was used to statistically confirm that the differences observed in the Boxplots are not due to chance, testing the **Null Hypothesis (H₀):** that the means of the feature are the same across all 21 classes.
 
 The results strongly indicate that the basic features are highly useful discriminators:
 
-| Feature Analyzed | F-Statistic | P-value ($p < 0.05$) | Conclusion |
+| Feature Analyzed | F-Statistic | P-value (p < 0.05) | Conclusion |
 | :--- | :--- | :--- | :--- |
-| $\text{mean\_G}$ | $170.43$ | $0.000\text{e}+00$ | **Reject $H_0$** (Highly Significant) |
-| $\text{mean\_ExG}$ | $79.10$ | $1.113\text{e}-300$ | **Reject $H_0$** (Highly Significant) |
-| $\text{std\_G}$ | $76.15$ | $1.187\text{e}-289$ | **Reject $H_0$** (Highly Significant) |
+| mean_G | 170.43 | 0.000e+00 | **Reject H₀** (Highly Significant) |
+| mean_ExG | 79.10 | 1.113e-300 | **Reject H₀** (Highly Significant) |
+| std_G | 76.15 | 1.187e-289 | **Reject H₀** (Highly Significant) |
 
-**Interpretation:** The P-values confirm that the observed differences are highly improbable to be due to random chance. **Rejecting $\mathbf{H_0}$** means the feature is statistically useful for classification.
+**Interpretation:** The P-values confirm that the observed differences are highly improbable to be due to random chance. **Rejecting H₀** means the feature is statistically useful for classification.
 
 ### Normalization
 The dataset was prepared for scale-sensitive models (like Neural Networks) by applying **Standardization (Z-score)** to all numerical features. This is performed to accelerate model convergence, although it does not affect correlation.
@@ -87,8 +87,8 @@ A **Random Forest Classifier** was used on the extracted statistical features to
 
 ### Model Setup
 * **Model:** Random Forest Classifier (Insensitive to scale/normalization)
-* **Features:** Statistical features (e.g., $\text{mean\_R}, \text{mean\_ExG}$)
-* **Data Split:** $80\%$ Train, $20\%$ Test (stratified).
+* **Features:** Statistical features (e.g., mean_R, mean_ExG)
+* **Data Split:** 80% Train, 20% Test (stratified).
 
 ### Code Snippet: Baseline Evaluation
 
