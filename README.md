@@ -143,8 +143,8 @@ print(classification_report(y_test, y_pred))
 
 ### Conclusion and Next Steps
 
-Performance is Poor: An accuracy of 28% is significantly better than random guessing (≈4.8%), but it means the model is incorrect more than two-thirds of the time.
+- An accuracy of 28% is significantly better than random guessing (≈4.8%), but it means the model is incorrect more than two-thirds of the time.
 
-Justification for Step 4: The basic features (means, standard deviations, ExG) are insufficient to correctly distinguish the 21 land use classes as they only capture simple color and brightness information.
+- Justification: The basic features (means, standard deviations, ExG) are insufficient to correctly distinguish the 21 land use classes as they only capture simple color and brightness information.
 
-**Need for CNN**: To significantly improve accuracy, the next step must focus on implementing the core Deep Learning pipeline to extract deep features (CNN Embeddings). These features will capture the essential textures, shapes, and spatial patterns needed for high-fidelity classification.
+- **Need for CNN**: To significantly improve accuracy, the next step must focus on implementing the core Deep Learning pipeline to extract deep features (CNN Embeddings). These features will capture the essential textures, shapes, and spatial patterns needed for high-fidelity classification.
