@@ -2,18 +2,18 @@
 
 This repository documents the preliminary steps of a Master's level Machine Learning project focused on classifying aerial imagery. We cover problem definition, feature engineering, exploratory data analysis (EDA), and establishing a performance baseline.
 
-## 🎯 1. Project Goal and Problem Definition (Step 1)
+## 1. Project Goal and Problem Definition (Step 1)
 
 ### Business Objective
 The primary objective is to **develop an automated tool for classifying land use** (urban, agricultural, natural, etc.) from aerial images. This is a critical task in remote sensing and urban planning.
 
 ### Data Source
-The project utilizes the **UC Merced Land Use Dataset**, featuring 21 distinct land use scene categories.
+The project utilizes the[**UC Merced Land Use Dataset**](https://www.kaggle.com/datasets/abdulhasibuddin/uc-merced-land-use-dataset), featuring 21 distinct land use scene categories, from  USGS National Map Urban Area Imagery.
 
 ### ML Problem Type
-This is a **Supervised Image Classification** problem.
+This is a **Supervised Image Multi-class Classification** problem.
 
-**Research Question:** "Which Deep Learning model (CNN) achieves the highest accuracy in classifying the 21 land use scenes of the UC Merced dataset, leveraging techniques like Transfer Learning and Data Augmentation?"
+**Research Question:** "Which learning model achieves the highest accuracy in classifying the 21 land use scenes of the UC Merced dataset, leveraging techniques like Transfer Learning and Data Augmentation?"
 
 ### Variables
 * **Target Variables (y):** The **21 land use classes** (e.g., `baseball diamond`, `freeway`, `forest`, etc.).
@@ -21,12 +21,12 @@ This is a **Supervised Image Classification** problem.
 
 ---
 
-## 2. 📝 Data Preparation and Feature Engineering (Step 2 & 3)
+## 2. Data Preparation and Feature Engineering
 
 ### Data Integrity and Missing Values
 The dataset organization ensures data integrity:
 * **Missing Labels:** No missing labels were found, as the class label is determined by the parent folder name (e.g., the folder name `airplane` is the label).
-* **Missing Values (NoData):** The images exhibit black borders due to orthorectification. These were treated as "NoData" zones and their influence was accepted/minimized through necessary image resizing during the preprocessing phase.
+* **Missing Values (NoData):** The images exhibit black borders due to orthorectification. These were can be consideres as "NoData" zones but their influence is accepted due to the regularity of the border proportion in every class.
 
 ### Baseline Feature Extraction (Statistical Features)
 To establish a quick benchmark, we extracted simple statistical features from the RGB channels for each image, resulting in a DataFrame (`image_features.csv`).
@@ -39,28 +39,33 @@ To establish a quick benchmark, we extracted simple statistical features from th
 
 ---
 
-## 3. 📈 Exploratory Data Analysis (EDA) and Normalization (Step 3)
+## 3. Exploratory Data Analysis (EDA) and Normalization
 
 ### Univariate and Bivariate Analysis
 
 #### Univariate Analysis (Distribution)
-We analyzed the distribution of each feature across all images (e.g., histogram for mean_ExG).
-* **Visualization:** 
 
-[Image of Histogram illustrating univariate analysis]
+[visualization/ditributions.png]
 
-* **Purpose:** To check for symmetry, skewness, and potential outliers before normalization.
+The graphs generally show shapes close to Gaussian distributions,
+suggesting a certain overall homogeneity in the dataset while maintaining sufficient variability between images.
+The distribution of mean_G is relatively centered and not very extensive, indicating that the
+majority of images share similar levels of green, regardless of their category. Conversely, mean_ExG reflects strong heterogeneity, particularly between scenes rich in vegetation and urban, maritime, or sandy areas. Finally, std_G highlights differences in texture between images. Some are very uniform with low variance (e.g., agricultural fields or forests), while others are visually complex (different types of composition) with high variance.
 
 #### Bivariate Analysis (Boxplots)
 Boxplots were generated to study the distribution of a single feature (mean_ExG) across the 21 target classes. This checks the **discriminative power** of the feature.
-* **Visualization:** 
 
-[Image of Boxplot illustrating bivariate analysis]
+
+[visualization/boxplots.png]
 
 * **Key Observations:**
     * **Separability:** Classes with distinct quartile boxes (e.g., **"forest" vs "runway"**) are easily distinguishable by this feature.
     * **Overlap:** Classes with heavily overlapping boxes (e.g., **"dense residential" vs "medium residential"**) are harder to separate.
     * **Relevance:** Vegetation classes (forest, agricultural) exhibit higher mean_ExG values than classes composed of inert materials (buildings, freeways).
+
+* **Conclusion**
+    No single feature is sufficient to distinguish all classes. Mean_ExG is the most discriminating for vegetation classes, while mean_G and std_G help to separate vegetation classes from urban classes. These results highlight the need to combine several features, or even use advanced models such as CNNs, to improve classification accuracy.
+
 
 ### Statistical Correlation (ANOVA Test)
 
@@ -76,19 +81,21 @@ The results strongly indicate that the basic features are highly useful discrimi
 
 **Interpretation:** The P-values confirm that the observed differences are highly improbable to be due to random chance. **Rejecting H₀** means the feature is statistically useful for classification.
 
-### Normalization
-The dataset was prepared for scale-sensitive models (like Neural Networks) by applying **Standardization (Z-score)** to all numerical features. This is performed to accelerate model convergence, although it does not affect correlation.
+### Pearson Correlation
+
+#### Redundancy of characteristics
+The strong correlations between mean_R, mean_G, mean_B, and between std_R, std_G, std_B suggest redundancy in the information provided by these characteristics. This means that using all of these characteristics may not provide any significant additional information for a classification model.
 
 ---
 
-## 4. 📉 Baseline Model Performance (Step 3: Prediction Task)
+## 4. Baseline Model Performance (Prediction Task)
 
 A **Random Forest Classifier** was used on the extracted statistical features to establish a performance benchmark.
 
 ### Model Setup
 * **Model:** Random Forest Classifier (Insensitive to scale/normalization)
 * **Features:** Statistical features (e.g., mean_R, mean_ExG)
-* **Data Split:** 80% Train, 20% Test (stratified).
+* **Data Split:** 80% Train, 20% Test.
 
 ### Code Snippet: Baseline Evaluation
 
@@ -148,3 +155,73 @@ print(classification_report(y_test, y_pred))
 - Justification: The basic features (means, standard deviations, ExG) are insufficient to correctly distinguish the 21 land use classes as they only capture simple color and brightness information.
 
 - **Need for CNN**: To significantly improve accuracy, the next step must focus on implementing the core Deep Learning pipeline to extract deep features (CNN Embeddings). These features will capture the essential textures, shapes, and spatial patterns needed for high-fidelity classification.
+
+
+## CNN Embeddings
+
+### Model's Architecture
+
+```python
+
+model = tf.keras.Sequential([
+layers.Rescaling(1./255), #change of the numerical scale from 0-255 to 0-1
+layers.Conv2D(32, 3, activation= 'relu', padding = 'same'),
+layers.MaxPooling2D(),
+layers.Conv2D(64, 3, activation= 'relu', padding = 'same'),
+layers.MaxPooling2D(),
+layers.Conv2D(128, 3, activation= 'relu', padding = 'same'),
+layers.MaxPooling2D(),
+layers.GlobalAveragePooling2D(), #risk of overfitting with Flatten, this reduces the dimensions and keeps the important info with the
+average of each feature map
+layers.Dense(64, activation = 'relu'),
+layers.Dropout(0.3), #30% of the neurons will be ignored during
+training to prevent overfitting
+layers.Dense(num_classes, activation = 'softmax')
+])
+```
+
+- **Convolution and Pooling Layers**
+    Conv2D 32 filters of size 3x3 to extract local features (edges, textures).
+    MaxPooling2D() reduces the spatial dimension to capture the dominant features.
+    Repeat with 64 and 128 filters to extract higher-level features.
+- **Dense Layers**
+    The first dense layer is fully connected to combine the extracted features.
+    Dropout(0.3) randomly deactivates 30% of neurons during training to improve  generalization.
+    Final dense output layer for multi-class classification (21 classes).
+
+Choice of the Adam optimizer for its effectiveness with computer vision problems, as well as the loss function: SparseCategoricalCrossentropy because it is suitable for whole labels.
+
+### Training
+
+[visualization/first_epochs.jpg]
+[visualization/last_epochs.jpg]
+
+We see a fairly synchronized increase in the accuracy of the train and validation, as well as a consistent decrease in the loss of train and validation.
+These trends indicate that the model is learning effectively without falling into **underfitting** or **overfitting**.
+
+The model showed a clear improvement in performance between epoch 1 and epoch 50.
+Accuracy and macro recall, initially close to random levels, increased by a factor of approximately 6, achieving robust performance.
+We also observe stability in the metrics from epoch 49 onwards, where they stabilized around a value of 0.8, indicating the convergence of the model.
+
+### Results
+
+[metrics/confusion_matrix_epoch_50.png]
+
+The dominant diagonal indicates that the model is capable of correctly classifying the majority of samples. The following classes show particularly high prediction rates (out of 100 samples):
+
+- Agricultural : 97
+- Parkinglot : 97
+- Runway : 94
+- Harbor : 93
+- Beach : 86
+
+## Conclusion
+
+ - A Random Forest model was used as a benchmark, achieving 28% accuracy, confirming the need to use more advanced techniques.
+ Switching to a CNN model, with convolution layers, pooling layers, and a Dropout mechanism, achieved a macro **accuracy of 80%** and an **F1-score of 79%** after 50 epochs, without overfitting or underfitting. 
+ - Although classes such as agricultural or parking lot are well predicted, some, such as intersection or storage tanks, remain difficult to distinguish due to their visual similarity. To further improve results, avenues such as transfer learning or hyperparameter optimization could be explored. The potential of CNNs for automated aerial image analysis is well demonstrated, with possible applications in urban planning, environmental monitoring, and natural resource management.
+
+
+## Sources
+
+Yi Yang and Shawn Newsam, "Bag-Of-Visual-Words and Spatial Extensions for Land-Use Classification," ACM SIGSPATIAL International Conference on Advances in Geographic Information Systems (ACM GIS), 2010

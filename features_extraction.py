@@ -1,25 +1,8 @@
 
 
 """
-#verify missing values in dataset
-def verify_missing_values(df):
-    missing_values = df.isnull().sum()
-    total_cells = df.size
-    total_missing = missing_values.sum()
-    print(f"Total missing values: {total_missing}")
-    print(f"Percentage of missing values: {total_missing / total_cells * 100:.2%}")
-    return missing_values[missing_values > 0]
-
-train_data = pd.read_csv('dataset/train copy.csv')
-test_data = pd.read_csv('dataset/test.csv')
-validation_data = pd.read_csv('dataset/validation.csv')
-
-#verify_missing_values(train_data)
-#ces fichiers sont générés à partir de l'organisation des dossiers, il n'y a pas de missing values dans test et validation
-
 Chaque image a une étiquette : Le nom du dossier parent de l'image (ex. airplane) est l'étiquette de la classe. Il n'est donc pas possible d'avoir une image sans étiquette.
 
-Action requise : Aucune vérification de colonne Label manquante n'est nécessaire, car cette information est intégrée dans la structure du répertoire.
 """
 import pandas as pd
 import os
@@ -33,7 +16,7 @@ def extract_basic_features(image_path):
         # Read the image using OpenCV (default BGR)
         img = cv2.imread(image_path)
         if img is None:
-            return None # Handle cases where the file is not found
+            return None
             
         # Convert to float for calculations
         img_float = img.astype(np.float32)
@@ -42,8 +25,8 @@ def extract_basic_features(image_path):
         B = img_float[:, :, 0]
         G = img_float[:, :, 1]
         R = img_float[:, :, 2]
-        
-        # 1. Per-band statistics (normalized to [0, 255])
+
+        #normalize [0, 255]
         features = {
             'mean_R': np.mean(R) / 255.0,
             'std_R': np.std(R) / 255.0,
@@ -53,8 +36,7 @@ def extract_basic_features(image_path):
             'std_B': np.std(B) / 255.0,
         }
         
-        # 2. Excess Green Index (ExG):
-        # ExG = 2*G - R - B
+        # Excess Green Index (ExG)
         # This index helps highlight vegetation in RGB images.
         ExG = 2 * G - R - B
         features['mean_ExG'] = np.mean(ExG)
